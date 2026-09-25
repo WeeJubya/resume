@@ -1,0 +1,4 @@
+.superpowers/
+*.zip
+.DS_Store
+Thumbs.db
