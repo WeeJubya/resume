@@ -159,3 +159,47 @@ test('hero name uses relaxed tracking consistently across breakpoints', () => {
     if (heroRule) assert.doesNotMatch(heroRule[1], /letter-spacing:/);
   }
 });
+
+test('hero name has safe line spacing, stronger accent contrast and the decorative rail yields before overlap', () => {
+  const css = read('assets/css/styles.css');
+  assert.match(css, /\.hero h1\s*\{[^}]*line-height:\s*\.92/s);
+  assert.match(css, /\.hero h1 span\s*\{[^}]*color:\s*var\(--primary-bright\)/s);
+  assert.match(css, /@media\s*\(max-width:\s*1200px\)[\s\S]*?\.hero-rail\s*\{[^}]*display:\s*none/s);
+});
+
+test('Authoring Tools use the approved order and descriptions', () => {
+  const html = read('index.html');
+  const cluster = html.match(/<article class="skill-cluster future-panel">[\s\S]*?<h3>Authoring Tools<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
+  const expected = [
+    ['Adobe Captivate', 'Accessible authoring'],
+    ['eLB Lectora', 'Interactive eLearning'],
+    ['Articulate Storyline', 'Scenario-based learning']
+  ];
+  let cursor = -1;
+  for (const [tool, description] of expected) {
+    const toolIndex = cluster.indexOf(tool);
+    assert.ok(toolIndex > cursor, `${tool} should appear in the approved order`);
+    assert.match(cluster.slice(toolIndex), new RegExp(`${tool.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}<\\/strong><span>${description.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}<\\/span>`));
+    cursor = toolIndex;
+  }
+});
+
+test('Creative Media prioritises After Effects and includes Audition before DaVinci, while Design and Development includes scripting and programming', () => {
+  const html = read('index.html');
+  const creative = html.match(/<article class="skill-cluster skill-cluster--wide future-panel">[\s\S]*?<h3>Creative Media<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
+  const creativeOrder = ['After Effects', 'Photoshop', 'Premiere Pro', 'Illustrator', 'Adobe Audition', 'DaVinci Resolve'];
+  let creativeCursor = -1;
+  for (const tool of creativeOrder) {
+    const index = creative.indexOf(tool);
+    assert.ok(index > creativeCursor, `${tool} should appear in the approved Creative Media order`);
+    creativeCursor = index;
+  }
+  assert.match(creative, /Adobe Audition<\/strong><span>Audio editing &amp; cleanup<\/span>/);
+
+  const development = html.match(/<article class="skill-cluster future-panel">[\s\S]*?<h3>Design &amp; Development<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
+  assert.match(development, /VBS \/ VBA Scripting<\/strong><span>Workflow automation<\/span>/);
+  assert.match(development, /Visual Basic &amp; C Programming<\/strong><span>Application &amp; systems development<\/span>/);
+
+  const css = read('assets/css/styles.css');
+  assert.match(css, /\.skill-cluster--wide ul\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/s);
+});
