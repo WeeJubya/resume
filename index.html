@@ -14,7 +14,8 @@
   <meta property="og:image" content="https://weejubya.github.io/Resume/assets/img/social-preview.jpg" />
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <link rel="stylesheet" href="assets/css/styles.css" />
-  <script type="module" src="assets/js/site.js"></script>
+  <link rel="stylesheet" href="assets/css/module.css" />
+  <script type="module" src="assets/js/app.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -28,29 +29,26 @@
       </span>
     </div>
 
-    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-      <span class="sr-only">Toggle navigation</span>
-      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
-    </button>
-
-    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
-      <a href="#home" aria-current="page">Home</a>
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#skills">Skills</a>
-      <a href="#testimonials">Testimonials</a>
-      <a href="#contact">Contact</a>
+    <nav class="app-tabs" aria-label="Portfolio sections">
+      <div class="app-tabs__track" role="tablist" aria-label="Portfolio sections">
+        <button id="tab-home" role="tab" data-tab="home" aria-controls="panel-home" aria-selected="true" tabindex="0" type="button">Home</button>
+        <button id="tab-about" role="tab" data-tab="about" aria-controls="panel-about" aria-selected="false" tabindex="-1" type="button">About</button>
+        <button id="tab-experience" role="tab" data-tab="experience" aria-controls="panel-experience" aria-selected="false" tabindex="-1" type="button">Experience</button>
+        <button id="tab-portfolio" role="tab" data-tab="portfolio" aria-controls="panel-portfolio" aria-selected="false" tabindex="-1" type="button">Portfolio</button>
+        <button id="tab-skills" role="tab" data-tab="skills" aria-controls="panel-skills" aria-selected="false" tabindex="-1" type="button">Skills</button>
+        <button id="tab-testimonials" role="tab" data-tab="testimonials" aria-controls="panel-testimonials" aria-selected="false" tabindex="-1" type="button">Testimonials</button>
+        <button id="tab-contact" role="tab" data-tab="contact" aria-controls="panel-contact" aria-selected="false" tabindex="-1" type="button">Contact</button>
+      </div>
     </nav>
 
-    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme">
+    <button class="theme-toggle" id="theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark theme">
       <span class="theme-toggle__orb" aria-hidden="true"></span>
       <span class="theme-toggle__text">Theme</span>
     </button>
   </header>
 
-  <main id="main-content">
-    <section class="hero section-shell" id="home" data-section-index="01">
+  <main id="main-content" class="app-panels">
+    <section id="panel-home" class="hero section-shell tab-panel" role="tabpanel" aria-labelledby="tab-home" data-panel="home" data-section-index="01">
       <div class="hero-rail rail-panel" aria-hidden="true">
         <span>01</span><span>PROFILE</span><span>LEARNING</span><span>DESIGN</span>
       </div>
@@ -90,7 +88,7 @@
       </aside>
     </section>
 
-    <section class="section-shell about-section" id="about" data-section-index="02">
+    <section id="panel-about" class="section-shell about-section tab-panel" role="tabpanel" aria-labelledby="tab-about" data-panel="about" data-section-index="02">
       <header class="section-heading">
         <p class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> About me</p>
         <h2>Turning complex information into <span>engaging learning experiences.</span></h2>
@@ -118,7 +116,7 @@
       </div>
     </section>
 
-    <section class="section-shell experience-section" id="experience" data-section-index="03">
+    <section id="panel-experience" class="section-shell experience-section tab-panel" role="tabpanel" aria-labelledby="tab-experience" data-panel="experience" data-section-index="03">
       <header class="section-heading section-heading--split">
         <div>
           <p class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> Professional experience</p>
@@ -185,64 +183,68 @@
       </div>
     </section>
 
-    <section class="section-shell portfolio-section" id="portfolio" data-section-index="04">
+    <section id="panel-portfolio" class="section-shell portfolio-section tab-panel" role="tabpanel" aria-labelledby="tab-portfolio" data-panel="portfolio" data-section-index="04">
       <header class="section-heading section-heading--split">
         <div>
           <p class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> Project showcase</p>
           <h2>Learning designed around <span>real outcomes.</span></h2>
         </div>
-        <p>The work shown here focuses on the thinking behind the solution: audience, structure, interaction, delivery and evaluation.</p>
+        <p>Two examples of the way I combine learning design, creative development and technology: one large programme case study and one working instructional-design sample.</p>
       </header>
 
-      <article class="project project--featured future-panel">
-        <div class="project-copy">
-          <div class="project-kicker"><span>PROJECT 01</span><span>SECURE-SECTOR CASE STUDY</span></div>
-          <h3>Analyst Development Programme <span>(ADP)</span></h3>
-          <p class="project-lead">A structured training experience designed to give all new analysts a consistent foundation of knowledge and skills.</p>
-          <dl class="project-facts">
-            <div><dt>Audience</dt><dd>All new analysts</dd></div>
-            <div><dt>Tools</dt><dd>Articulate Storyline, Adobe Creative Suite</dd></div>
-            <div><dt>Delivery</dt><dd>Agile design, build and review cycles</dd></div>
-            <div><dt>Impact</dt><dd>More than 100 cohorts of 12–16 analysts by 2024</dd></div>
-          </dl>
-        </div>
-
-        <div class="project-visual">
-          <img class="project-photo" src="assets/img/adp-project.jpg" alt="Person reviewing charts on a laptop and printed reports" width="1600" height="1000" loading="lazy" />
-          <div class="project-photo-label" aria-hidden="true">DESIGN · DEVELOP · DEPLOY</div>
-        </div>
-
-        <ol class="process-strip" aria-label="ADP development process">
-          <li><span>01</span><div><strong>Planning &amp; Scoping</strong><small>Stakeholders, objectives, curriculum mapping and project plan.</small></div></li>
-          <li><span>02</span><div><strong>Design &amp; Prototyping</strong><small>Storyboards, core-module prototype and early feedback.</small></div></li>
-          <li><span>03</span><div><strong>Full Development</strong><small>Agile sprints, scripting, assets, build, peer review and sign-off.</small></div></li>
-          <li><span>04</span><div><strong>Review &amp; Deployment</strong><small>Accessibility checks, testing, pilot feedback and phased LMS release.</small></div></li>
-        </ol>
-      </article>
-
-      <article class="project project--sample future-panel">
-        <div class="project-copy">
-          <div class="project-kicker"><span>PROJECT 02</span><span>INSTRUCTIONAL DESIGN SAMPLE</span></div>
-          <h3>Renewable Energy <span>Storyboard</span></h3>
-          <p class="project-lead">A sample instructional-design storyboard demonstrating how a short learning module can introduce a topic, structure objectives, reveal detail through interaction and check understanding.</p>
-          <div class="sample-flow" aria-label="Sample module flow">
-            <span>Introduce</span><b aria-hidden="true">→</b><span>Explore</span><b aria-hidden="true">→</b><span>Apply</span><b aria-hidden="true">→</b><span>Check</span>
+      <div class="portfolio-workspace">
+        <article class="project-card future-panel" aria-labelledby="adp-title">
+          <div class="project-card__media">
+            <img class="project-photo" src="assets/img/adp-project.jpg" alt="Person reviewing charts on a laptop and printed reports" width="1600" height="1000" loading="lazy" />
+            <span class="project-photo-label" aria-hidden="true">DESIGN · DEVELOP · DEPLOY</span>
           </div>
-          <ul class="check-list">
-            <li>Identify the main types of renewable energy.</li>
-            <li>Describe positive climate impacts.</li>
-            <li>Recognise examples of UK renewable initiatives.</li>
-            <li>Use multiple-choice, true/false and drag-and-drop knowledge checks.</li>
-          </ul>
-        </div>
-        <div class="renewable-placeholder">
-          <img class="project-photo" src="assets/img/renewable-project.jpg" alt="Wind turbine backlit by the sun, used in the renewable energy storyboard sample" width="1400" height="900" loading="lazy" />
-          <p aria-hidden="true">RENEWABLE<br />ENERGY</p>
-        </div>
-      </article>
+          <div class="project-card__body">
+            <p class="eyebrow">Case Study · Programme Design</p>
+            <h2 id="adp-title">Analyst Developer Programme (ADP)</h2>
+            <p class="project-lead">The Analyst Development Programme was created to deliver a consistent, structured training experience for all new analysts, ensuring a shared foundation of knowledge and skills. It was a collaborative initiative between the in-house development team and an external training provider, combining subject matter expertise with tailored learning design.</p>
+            <dl class="project-facts">
+              <div><dt>Audience</dt><dd>All new analysts</dd></div>
+              <div><dt>Tools</dt><dd>Articulate Storyline, Adobe Creative Suite</dd></div>
+              <div><dt>Delivery</dt><dd>Agile design, build and review cycles</dd></div>
+              <div><dt>Impact</dt><dd>More than 100 cohorts of 12–16 analysts by 2024</dd></div>
+            </dl>
+            <div class="project-detail-grid">
+              <section><span>01</span><h3>Planning &amp; Scoping</h3><p>Engaged key stakeholders to define learning objectives, target audience needs and delivery constraints; developed the curriculum map and detailed project plan.</p></section>
+              <section><span>02</span><h3>Design &amp; Prototyping</h3><p>Built storyboards for priority modules, piloted a prototype and integrated early feedback into design templates for wider use.</p></section>
+              <section><span>03</span><h3>Full Development</h3><p>Developed modules in agile sprints covering scripting, asset creation, build, peer review and stakeholder sign-off, with shared version-controlled tracking.</p></section>
+              <section><span>04</span><h3>Review &amp; Deployment</h3><p>Conducted accessibility checks, browser/device testing and stakeholder walkthroughs, then packaged modules to SCORM for phased LMS/LXP releases.</p></section>
+            </div>
+            <div class="project-reflection">
+              <h3>Impact &amp; reflection</h3>
+              <p>As of 2024, more than 100 cohorts of between 12–16 analysts had completed the programme.</p>
+              <p>Delivering the ADP highlighted the value of collaboration in achieving a consistent and high-quality learner experience. Early alignment on learning outcomes and standards helped both teams develop coherent, accessible and relevant content, while feedback from early cohorts directly informed improvements in content sequencing and delivery methods.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card project-card--interactive future-panel" aria-labelledby="renewable-title">
+          <div class="project-card__media">
+            <img class="project-photo" src="assets/img/renewable-project.jpg" alt="Wind turbine backlit by the sun, used in the renewable energy storyboard sample" width="1400" height="900" loading="lazy" />
+            <span class="project-photo-label" aria-hidden="true">INTERACTIVE · STORYBOARD · KNOWLEDGE CHECK</span>
+          </div>
+          <div class="project-card__body">
+            <p class="eyebrow">Interactive Sample · Instructional Design</p>
+            <h2 id="renewable-title">Renewable Energy</h2>
+            <p class="project-lead">A working reconstruction of the storyboard sample: explore renewable energy types, reveal climate-impact content, open the Avonmouth Wind Farm case study, then complete the knowledge check.</p>
+            <ul class="check-list">
+              <li>Identify the main types of renewable energy.</li>
+              <li>Describe how renewable energy benefits the world climate.</li>
+              <li>Recognise renewable initiatives in the UK.</li>
+              <li>Complete five questions and a five-pair matching activity.</li>
+            </ul>
+            <button class="control-button control-button--primary" id="launch-renewable-module" type="button">Launch Interactive Case Study</button>
+            <noscript><p class="noscript-note noscript-note--inline">JavaScript is required to launch the interactive learning demonstration. The surrounding portfolio content remains available.</p></noscript>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <section class="section-shell skills-section" id="skills" data-section-index="05">
+    <section id="panel-skills" class="section-shell skills-section tab-panel" role="tabpanel" aria-labelledby="tab-skills" data-panel="skills" data-section-index="05">
       <header class="section-heading section-heading--split">
         <div>
           <p class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> Skills &amp; technologies</p>
@@ -283,7 +285,7 @@
       </div>
     </section>
 
-    <section class="section-shell testimonials-section" id="testimonials" data-section-index="06">
+    <section id="panel-testimonials" class="section-shell testimonials-section tab-panel" role="tabpanel" aria-labelledby="tab-testimonials" data-panel="testimonials" data-section-index="06">
       <header class="section-heading">
         <p class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> Colleague feedback</p>
         <h2>Trusted to turn complexity into <span>clear, engaging work.</span></h2>
@@ -300,7 +302,7 @@
       </div>
     </section>
 
-    <section class="section-shell contact-section" id="contact" data-section-index="07">
+    <section id="panel-contact" class="section-shell contact-section tab-panel" role="tabpanel" aria-labelledby="tab-contact" data-panel="contact" data-section-index="07">
       <div class="contact-panel future-panel">
         <div>
           <p class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> Contact</p>
@@ -315,6 +317,45 @@
       </div>
     </section>
   </main>
+
+
+  <section class="learning-module" id="renewable-module" aria-label="Renewable Energy interactive case study" hidden>
+    <header class="learning-module__header">
+      <div>
+        <p class="learning-module__kicker">Interactive case study</p>
+        <strong>Renewable Energy</strong>
+      </div>
+      <div class="learning-module__status">
+        <span id="module-section-label">01 · Welcome</span>
+        <button class="module-control" id="module-theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark theme">Theme</button>
+        <button class="module-control module-control--exit" id="module-exit" type="button">Exit to Portfolio</button>
+      </div>
+    </header>
+
+    <div class="learning-module__stage" id="module-stage" tabindex="-1"></div>
+
+    <footer class="learning-module__nav" aria-label="Learning module navigation">
+      <button class="module-control" id="module-back" type="button">← Back</button>
+      <div class="module-progress" aria-label="Module progress">
+        <span id="module-progress-text">1 of 6</span>
+        <span class="module-progress__track" aria-hidden="true"><span id="module-progress-fill"></span></span>
+      </div>
+      <button class="module-control module-control--primary" id="module-next" type="button">Next →</button>
+    </footer>
+  </section>
+
+  <template id="avonmouth-launch-template">
+    <button class="module-control module-control--primary" id="open-avonmouth" type="button">View Case Study</button>
+  </template>
+
+  <div class="dialog-backdrop" id="avonmouth-backdrop" hidden>
+    <section id="avonmouth-dialog" role="dialog" aria-modal="true" aria-labelledby="avonmouth-title" tabindex="-1" class="case-dialog">
+      <p class="case-dialog__kicker">Case Study</p>
+      <h2 id="avonmouth-title">Avonmouth Wind Farm</h2>
+      <div id="avonmouth-copy" class="case-dialog__copy"></div>
+      <button class="module-control module-control--primary" id="close-avonmouth" type="button">Close</button>
+    </section>
+  </div>
 
   <footer class="site-footer">
     <div class="brand brand--footer"><span class="brand-mark" aria-hidden="true"><span></span></span><span class="brand-copy"><strong>Glynn Williams</strong><small>eLearning &amp; Instructional Design</small></span></div>

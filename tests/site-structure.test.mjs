@@ -24,7 +24,10 @@ test('every HTML page contains the GNU Terry Pratchett meta tag', () => {
 
 test('index exposes every required section anchor', () => {
   const html = read('index.html');
-  for (const id of requiredSections) assert.match(html, new RegExp(`id=["']${id}["']`));
+  for (const id of requiredSections) {
+    assert.match(html, new RegExp(`id=[\"']tab-${id}[\"']`));
+    assert.match(html, new RegExp(`id=[\"']panel-${id}[\"']`));
+  }
 });
 
 test('site metadata uses the Resume project URL', () => {
@@ -80,9 +83,9 @@ test('page includes baseline accessibility hooks', () => {
   const html = read('index.html');
   assert.match(html, /class="skip-link"/);
   assert.match(html, /<main\b/);
-  assert.match(html, /aria-label="Primary navigation"/);
+  assert.match(html, /aria-label="Portfolio sections"/);
+  assert.match(html, /role="tablist"/);
   assert.match(html, /id="theme-toggle"/);
-  assert.match(html, /aria-expanded="false"/);
 });
 
 test('CSS defines both named themes and minimum target size', () => {
@@ -96,9 +99,9 @@ test('CSS defines both named themes and minimum target size', () => {
 
 test('interactive controls are wired with accessible state', () => {
   const html = read('index.html');
-  assert.match(html, /id="nav-toggle"[^>]*aria-expanded="false"/s);
+  assert.match(html, /id="tab-home"[^>]*role="tab"/s);
   assert.match(html, /id="theme-toggle"[^>]*aria-label=/s);
-  assert.match(html, /type="module" src="assets\/js\/site\.js"/);
+  assert.match(html, /type="module" src="assets\/js\/app\.js"/);
 });
 
 for (const asset of [
@@ -132,15 +135,27 @@ test('README documents the exact repository and PowerShell Pages deployment flow
   ]) assert.match(readme, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 });
 
-test('mobile navigation remains available without JavaScript and collapses only after JS initialization', () => {
+test('mobile navigation uses an always-visible horizontally scrollable tab strip', () => {
   const css = read('assets/css/styles.css');
-  assert.match(css, /@media\s*\(max-width:\s*900px\)[\s\S]*?\.site-nav\s*\{[^}]*display:\s*grid/s);
-  assert.match(css, /\.js-ready\s+\.site-nav:not\(\.is-open\)\s*\{[^}]*display:\s*none/s);
-  assert.match(css, /\.js-ready\s+\.nav-toggle\s*\{[^}]*display:\s*block/s);
+  const html = read('index.html');
+  assert.match(css, /\.app-tabs__track\s*\{[^}]*overflow-x:\s*auto/s);
+  assert.match(html, /role="tablist"/);
+  assert.doesNotMatch(html, /id="nav-toggle"/);
 });
 
 test('gold text uses a contrast-safe theme token', () => {
   const css = read('assets/css/styles.css');
   assert.match(css, /--gold-text:\s*#[0-9a-f]{6}/i);
   assert.match(css, /\[data-theme="dark"\][\s\S]*--gold-text:\s*#[0-9a-f]{6}/i);
+});
+
+
+test('hero name uses relaxed tracking consistently across breakpoints', () => {
+  const css = read('assets/css/styles.css');
+  assert.match(css, /\.hero h1\s*\{[^}]*letter-spacing:\s*-\.035em/s);
+  const mobileBlocks = [...css.matchAll(/@media\s*\(max-width:[^)]+\)\s*\{([\s\S]*?)\n\}/g)].map((m) => m[1]);
+  for (const block of mobileBlocks) {
+    const heroRule = block.match(/\.hero h1\s*\{([^}]*)\}/s);
+    if (heroRule) assert.doesNotMatch(heroRule[1], /letter-spacing:/);
+  }
 });

@@ -168,3 +168,58 @@ Every HTML page includes:
 ## Public-content note
 
 The repository intentionally excludes the source CV and PowerPoint portfolio. It also excludes the mobile telephone number, private address details and referee contact information from the supplied source documents.
+
+## Preserve V1 before publishing V2
+
+From Developer PowerShell:
+
+```powershell
+Set-Location C:\Dev\Resume
+git status --short
+git tag -a v1.0 -m "Resume portfolio V1"
+git push origin v1.0
+```
+
+Only run the tag command while `HEAD` is the accepted V1 commit. If `v1.0` already exists, verify it instead of recreating it.
+
+## Run the tests
+
+```powershell
+Set-Location C:\Dev\Resume
+node --test tests\*.test.mjs
+```
+
+## V2 interface and interactive sample
+
+V2 replaces the long scrolling presentation with seven hash-addressable tabs: `#home`, `#about`, `#experience`, `#portfolio`, `#skills`, `#testimonials`, and `#contact`. Browser Back and Forward can therefore move between portfolio sections without a page reload.
+
+The Renewable Energy project launches as a near-full-screen learning demonstration from the Portfolio tab. Its learning state is **session-only** and deliberately resets on refresh, exit, or restart. The knowledge check selects five questions from a ten-question bank and adds five renewable-type matching points. The score is therefore out of 10, with **8/10 = 80%** required to pass.
+
+The published site remains dependency-free. There is **no build step** and no runtime package installation: GitHub Pages serves the HTML, CSS, JavaScript, and images directly from the repository root.
+
+## Publish V2 from Developer PowerShell
+
+```powershell
+Set-Location C:\Dev\Resume
+
+# Verify V1 is preserved before replacing the published root site.
+git show --no-patch v1.0
+
+# Verify V2 before commit/push.
+node --test tests\*.test.mjs
+git status
+
+git add .
+git commit -m "Release Resume portfolio V2"
+git push origin main
+```
+
+After GitHub Pages has updated and V2 has been accepted, the release may be tagged:
+
+```powershell
+Set-Location C:\Dev\Resume
+git tag -a v2.0 -m "Resume portfolio V2"
+git push origin v2.0
+```
+
+The site is published from the repository root at `https://weejubya.github.io/Resume/`.
