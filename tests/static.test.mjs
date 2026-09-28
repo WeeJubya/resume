@@ -71,8 +71,8 @@ test('Renewable module shell and accessible Avonmouth dialog hooks exist', () =>
 
 test('module stylesheet and script assets are relative', () => {
   const html = read('index.html');
-  assert.match(html, /href=["']assets\/css\/module\.css["']/i);
-  assert.match(html, /src=["']assets\/js\/app\.js["']/i);
+  assert.match(html, /href=["']assets\/css\/module\.css(?:\?v=[^"']+)?["']/i);
+  assert.match(html, /src=["']assets\/js\/app\.js(?:\?v=[^"']+)?["']/i);
   assert.doesNotMatch(html, /(?:href|src)=["']\/assets\//i);
 });
 

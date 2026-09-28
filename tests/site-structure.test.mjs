@@ -101,7 +101,7 @@ test('interactive controls are wired with accessible state', () => {
   const html = read('index.html');
   assert.match(html, /id="tab-home"[^>]*role="tab"/s);
   assert.match(html, /id="theme-toggle"[^>]*aria-label=/s);
-  assert.match(html, /type="module" src="assets\/js\/app\.js"/);
+  assert.match(html, /type="module" src="assets\/js\/app\.js(?:\?v=[^"]+)?"/);
 });
 
 for (const asset of [
@@ -160,11 +160,25 @@ test('hero name uses relaxed tracking consistently across breakpoints', () => {
   }
 });
 
-test('hero name has safe line spacing, stronger accent contrast and the decorative rail yields before overlap', () => {
+test('hero name uses explicit stacked lines with a safe gap and high-contrast last name', () => {
+  const html = read('index.html');
   const css = read('assets/css/styles.css');
-  assert.match(css, /\.hero h1\s*\{[^}]*line-height:\s*\.92/s);
-  assert.match(css, /\.hero h1 span\s*\{[^}]*color:\s*var\(--primary-bright\)/s);
-  assert.match(css, /@media\s*\(max-width:\s*1200px\)[\s\S]*?\.hero-rail\s*\{[^}]*display:\s*none/s);
+  assert.match(html, /<h1[^>]*>\s*<span class="hero-name__first">Glynn<\/span>\s*<span class="hero-name__last">Williams<\/span>\s*<\/h1>/s);
+  assert.match(css, /\.hero h1\s*\{[^}]*display:\s*grid[^}]*row-gap:\s*\.12em/s);
+  assert.match(css, /\.hero-name__last\s*\{[^}]*color:\s*var\(--primary-bright\)/s);
+});
+
+test('decorative hero rail is removed from layout so it cannot underlay copy', () => {
+  const css = read('assets/css/styles.css');
+  assert.match(css, /\.hero\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1\.25fr\)\s+minmax\(310px,\s*\.75fr\)\s+minmax\(250px,\s*\.52fr\)/s);
+  assert.match(css, /\.hero-rail\s*\{[^}]*display:\s*none/s);
+});
+
+test('homepage assets use a versioned URL so CSS and JS updates bypass stale browser caches', () => {
+  const html = read('index.html');
+  assert.match(html, /href="assets\/css\/styles\.css\?v=20260928-2"/);
+  assert.match(html, /href="assets\/css\/module\.css\?v=20260928-2"/);
+  assert.match(html, /src="assets\/js\/app\.js\?v=20260928-2"/);
 });
 
 test('Authoring Tools use the approved order and descriptions', () => {
