@@ -8,7 +8,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const htmlFiles = ['index.html', '404.html'];
 const gnuTag = '<meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />';
-const requiredSections = ['home', 'about', 'experience', 'portfolio', 'skills', 'testimonials', 'contact'];
+const requiredSections = ['home', 'about', 'what-i-do', 'experience', 'portfolio', 'testimonials', 'contact'];
 
 const read = (name) => readFileSync(resolve(root, name), 'utf8');
 
@@ -59,10 +59,10 @@ test('index contains the approved public-facing portfolio content', () => {
   const html = read('index.html');
   for (const phrase of [
     'Glynn Williams',
-    'eLearning Specialist',
+    'Digital Learning Designer',
     'Creative Developer',
     'Instructional Designer',
-    'Analyst Development Programme',
+    'Analyst Developer Programme',
     '100 cohorts',
     'Renewable Energy',
     'Articulate Storyline',
@@ -176,14 +176,14 @@ test('decorative hero rail is removed from layout so it cannot underlay copy', (
 
 test('homepage assets use a versioned URL so CSS and JS updates bypass stale browser caches', () => {
   const html = read('index.html');
-  assert.match(html, /href="assets\/css\/styles\.css\?v=20260928-2"/);
-  assert.match(html, /href="assets\/css\/module\.css\?v=20260928-2"/);
-  assert.match(html, /src="assets\/js\/app\.js\?v=20260928-2"/);
+  assert.match(html, /href="assets\/css\/styles\.css\?v=20261015-3"/);
+  assert.match(html, /href="assets\/css\/module\.css\?v=20261015-3"/);
+  assert.match(html, /src="assets\/js\/app\.js\?v=20261015-3"/);
 });
 
-test('Authoring Tools use the approved order and descriptions', () => {
+test('eLearning Development keeps the approved authoring order and descriptions', () => {
   const html = read('index.html');
-  const cluster = html.match(/<article class="skill-cluster future-panel">[\s\S]*?<h3>Authoring Tools<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
+  const cluster = html.match(/<article class="skill-cluster future-panel">[\s\S]*?<h3>eLearning Development<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
   const expected = [
     ['Adobe Captivate', 'Accessible authoring'],
     ['eLB Lectora', 'Interactive eLearning'],
@@ -193,14 +193,14 @@ test('Authoring Tools use the approved order and descriptions', () => {
   for (const [tool, description] of expected) {
     const toolIndex = cluster.indexOf(tool);
     assert.ok(toolIndex > cursor, `${tool} should appear in the approved order`);
-    assert.match(cluster.slice(toolIndex), new RegExp(`${tool.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}<\\/strong><span>${description.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}<\\/span>`));
+    assert.ok(cluster.includes(`<strong>${tool}</strong><span>${description}</span>`));
     cursor = toolIndex;
   }
 });
 
-test('Creative Media prioritises After Effects and includes Audition before DaVinci, while Design and Development includes scripting and programming', () => {
+test('Creative Media prioritises After Effects and Technical Development includes scripting and programming', () => {
   const html = read('index.html');
-  const creative = html.match(/<article class="skill-cluster skill-cluster--wide future-panel">[\s\S]*?<h3>Creative Media<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
+  const creative = html.match(/<article class="skill-cluster future-panel">[\s\S]*?<h3>Creative Media<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
   const creativeOrder = ['After Effects', 'Photoshop', 'Premiere Pro', 'Illustrator', 'Adobe Audition', 'DaVinci Resolve'];
   let creativeCursor = -1;
   for (const tool of creativeOrder) {
@@ -210,10 +210,10 @@ test('Creative Media prioritises After Effects and includes Audition before DaVi
   }
   assert.match(creative, /Adobe Audition<\/strong><span>Audio editing &amp; cleanup<\/span>/);
 
-  const development = html.match(/<article class="skill-cluster future-panel">[\s\S]*?<h3>Design &amp; Development<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
+  const development = html.match(/<article class="skill-cluster future-panel">[\s\S]*?<h3>Technical &amp; Development<\/h3>[\s\S]*?<\/article>/)?.[0] ?? '';
   assert.match(development, /VBS \/ VBA Scripting<\/strong><span>Workflow automation<\/span>/);
   assert.match(development, /Visual Basic &amp; C Programming<\/strong><span>Application &amp; systems development<\/span>/);
 
   const css = read('assets/css/styles.css');
-  assert.match(css, /\.skill-cluster--wide ul\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*1fr\)/s);
+  assert.match(css, /\.what-i-do-section \.skills-dashboard\s*\{[^}]*grid-template-columns:\s*repeat\(2,/s);
 });
