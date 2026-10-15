@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { TAB_IDS, normaliseTabId, nextFocusedIndex } from '../assets/js/tabs.js';
 
 test('tab order is the approved seven-tab order', () => {
-  assert.deepEqual(TAB_IDS, ['home', 'about', 'experience', 'portfolio', 'skills', 'testimonials', 'contact']);
+  assert.deepEqual(TAB_IDS, ['home', 'about', 'what-i-do', 'experience', 'portfolio', 'testimonials', 'contact']);
 });
 
 test('missing or unknown hash resolves to home', () => {
@@ -14,7 +14,8 @@ test('missing or unknown hash resolves to home', () => {
 
 test('valid hash resolves to its tab id case-insensitively', () => {
   assert.equal(normaliseTabId('#portfolio'), 'portfolio');
-  assert.equal(normaliseTabId('#SKILLS'), 'skills');
+  assert.equal(normaliseTabId('#WHAT-I-DO'), 'what-i-do');
+  assert.equal(normaliseTabId('#skills'), 'home');
 });
 
 test('arrow, Home and End keys move focus with wraparound', () => {
