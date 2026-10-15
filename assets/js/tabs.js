@@ -1,5 +1,5 @@
 export const TAB_IDS = Object.freeze([
-  'home', 'about', 'experience', 'portfolio', 'skills', 'testimonials', 'contact'
+  'home', 'about', 'what-i-do', 'experience', 'portfolio', 'testimonials', 'contact'
 ]);
 
 export function normaliseTabId(hash = '') {
