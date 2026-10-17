@@ -23,6 +23,25 @@ const SCREEN_LABELS = Object.freeze([
   '06 · Results'
 ]);
 
+export const RENEWABLE_IMAGES = Object.freeze({
+  welcome: 'assets/img/renewable/welcome.webp',
+  typesOverview: 'assets/img/renewable/types-overview.webp',
+  types: Object.freeze({
+    solar: 'assets/img/renewable/type-solar.webp',
+    wind: 'assets/img/renewable/type-wind.webp',
+    hydro: 'assets/img/renewable/type-hydro.webp',
+    biomass: 'assets/img/renewable/type-biomass.webp',
+    geothermal: 'assets/img/renewable/type-geothermal.webp'
+  }),
+  climateOverview: 'assets/img/renewable/climate-overview.webp',
+  climateMap: 'assets/img/renewable/climate-map.webp',
+  climateNotebook: 'assets/img/renewable/climate-notebook.webp',
+  ukOverview: 'assets/img/renewable/uk-overview.webp',
+  ukMap: 'assets/img/renewable/uk-map.webp',
+  avonmouthLaunch: 'assets/img/renewable/avonmouth-launch.webp',
+  avonmouthCase: 'assets/img/renewable/avonmouth-case.webp'
+});
+
 export function createModuleState() {
   return {
     screen: 0,
@@ -100,6 +119,7 @@ function renderWelcome() {
         <h1>Renewable Energy</h1>
         <p class="module-screen__lede">In this short module, you’ll explore the key types of renewable energy and understand how they help address climate change - globally and here in the UK.</p>
       </header>
+      <figure class="module-hero-image"><img src="${RENEWABLE_IMAGES.welcome}" alt="Wind turbine beside solar panels in a green riverside landscape" width="560" height="315" decoding="async" /></figure>
       <div class="objective-grid" aria-label="Learning objectives">
         ${LEARNING_OBJECTIVES.map((objective, index) => `<section class="objective-card"><strong>Objective ${index + 1}</strong><p>${escapeHtml(objective)}</p></section>`).join('')}
       </div>
@@ -115,11 +135,12 @@ function renderTypes(state) {
         <h2>What are the main types of renewable energy?</h2>
         <p class="module-screen__lede">Select each energy type for more information. Open all five to continue.</p>
       </header>
+      <figure class="module-banner-image"><img src="${RENEWABLE_IMAGES.typesOverview}" alt="Wind turbines silhouetted against a bright sunrise" width="560" height="322" loading="lazy" decoding="async" /></figure>
       <div class="renewable-type-grid" aria-label="Renewable energy types">
         ${RENEWABLE_TYPES.map((item) => {
           const viewed = state.viewedTypes.has(item.id);
           const active = item.id === state.activeType;
-          return `<button type="button" class="renewable-type-control${viewed ? ' is-viewed' : ''}" data-renewable-type="${item.id}" aria-pressed="${active}">${escapeHtml(item.name)}</button>`;
+          return `<button type="button" class="renewable-type-control${viewed ? ' is-viewed' : ''}" data-renewable-type="${item.id}" aria-pressed="${active}"><img class="renewable-type-control__image" src="${RENEWABLE_IMAGES.types[item.id]}" alt="" loading="lazy" decoding="async" /><span class="renewable-type-control__label">${escapeHtml(item.name)}</span></button>`;
         }).join('')}
       </div>
       <section class="type-detail" id="renewable-type-detail" aria-live="polite">
@@ -136,13 +157,20 @@ function renderClimate(state) {
         <h2>Positive impact on the world climate</h2>
         <p class="module-screen__lede">Open each panel to explore the supplied climate-impact points.</p>
       </header>
+      <figure class="module-banner-image module-banner-image--climate"><img src="${RENEWABLE_IMAGES.climateOverview}" alt="Wind turbines silhouetted against a pink and orange sky" width="560" height="315" loading="lazy" decoding="async" /></figure>
       <div class="climate-grid">
         ${CLIMATE_IMPACTS.map((impact, index) => {
           const viewed = state.viewedImpacts.has(index);
           return `<section class="climate-card"><button type="button" class="climate-reveal${viewed ? ' is-viewed' : ''}" data-impact-index="${index}" aria-expanded="${viewed}">Impact ${index + 1}</button>${viewed ? `<div class="climate-card__copy"><p>${escapeHtml(impact)}</p></div>` : ''}</section>`;
         }).join('')}
       </div>
-      <aside class="climate-factoid"><strong>Factoid</strong><p>${escapeHtml(CLIMATE_FACTOID)}</p><p>${escapeHtml(CLIMATE_EMITTER_NOTE)}</p></aside>
+      <div class="climate-evidence-grid">
+        <figure class="module-inline-image climate-map"><img src="${RENEWABLE_IMAGES.climateMap}" alt="World map from the original storyboard highlighting countries identified as high carbon emitters" width="264" height="173" loading="lazy" decoding="async" /></figure>
+        <aside class="climate-factoid climate-notebook">
+          <img src="${RENEWABLE_IMAGES.climateNotebook}" alt="" width="800" height="237" loading="lazy" decoding="async" />
+          <div class="climate-notebook__copy"><strong>Factoid</strong><p>${escapeHtml(CLIMATE_FACTOID)}</p><p>${escapeHtml(CLIMATE_EMITTER_NOTE)}</p></div>
+        </aside>
+      </div>
     </article>`;
 }
 
@@ -154,14 +182,21 @@ function renderUK(state) {
         <h2>Renewable Energy in the UK</h2>
         <p class="module-screen__lede">Explore the supplied UK context, then open the Avonmouth Wind Farm case study to continue.</p>
       </header>
-      <div class="uk-grid">
-        ${UK_CONTENT.map((paragraph, index) => `<section class="uk-card"><strong>${String(index + 1).padStart(2, '0')}</strong><p>${escapeHtml(paragraph)}</p></section>`).join('')}
+      <figure class="module-banner-image module-banner-image--uk"><img src="${RENEWABLE_IMAGES.ukOverview}" alt="Wind farm stretching across a hilly landscape under a cloudy sky" width="560" height="315" loading="lazy" decoding="async" /></figure>
+      <div class="uk-context-layout">
+        <figure class="module-inline-image uk-map"><img src="${RENEWABLE_IMAGES.ukMap}" alt="Map of the UK showing renewable-energy project locations from the original storyboard" width="260" height="311" loading="lazy" decoding="async" /></figure>
+        <div class="uk-grid">
+          ${UK_CONTENT.map((paragraph, index) => `<section class="uk-card"><strong>${String(index + 1).padStart(2, '0')}</strong><p>${escapeHtml(paragraph)}</p></section>`).join('')}
+        </div>
       </div>
       <section class="case-study-launch">
-        <p class="case-dialog__kicker">Case Study</p>
-        <h3>${escapeHtml(AVONMOUTH_CASE_STUDY.title)}</h3>
-        <p>Open the case study to review the full supplied Avonmouth example.</p>
-        <button class="module-control module-control--primary" id="open-avonmouth" type="button">View Case Study${state.avonmouthOpened ? ' · Viewed ✓' : ''}</button>
+        <img class="case-study-launch__image" src="${RENEWABLE_IMAGES.avonmouthLaunch}" alt="Visitors gathered at the base of a wind turbine" width="250" height="368" loading="lazy" decoding="async" />
+        <div class="case-study-launch__copy">
+          <p class="case-dialog__kicker">Case Study</p>
+          <h3>${escapeHtml(AVONMOUTH_CASE_STUDY.title)}</h3>
+          <p>Open the case study to review the full supplied Avonmouth example.</p>
+          <button class="module-control module-control--primary" id="open-avonmouth" type="button">View Case Study${state.avonmouthOpened ? ' · Viewed ✓' : ''}</button>
+        </div>
       </section>
     </article>`;
 }
@@ -369,7 +404,7 @@ export function createRenewableModuleController({ root, launchButton, onExit }) 
     markAvonmouthOpened(state);
     syncControls();
     modalOpener = button ?? doc?.activeElement ?? null;
-    if (dialogCopy) dialogCopy.innerHTML = AVONMOUTH_CASE_STUDY.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('');
+    if (dialogCopy) dialogCopy.innerHTML = `<figure class="case-dialog__image"><img src="${RENEWABLE_IMAGES.avonmouthCase}" alt="Wind turbine beside a bright low sun" width="760" height="416" decoding="async" /></figure>` + AVONMOUTH_CASE_STUDY.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('');
     backdrop.hidden = false;
     setPageInert(true);
     const focusables = focusableInDialog();
