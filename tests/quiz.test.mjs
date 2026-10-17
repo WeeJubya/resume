@@ -69,3 +69,31 @@ test('retry returns a fresh valid five-question attempt with no learner state', 
   assert.equal(retry.answers.size, 0);
   assert.equal(retry.matches.size, 0);
 });
+
+test('question choices are shuffled per attempt without mutating the bank or its answer keys', () => {
+  const attempt = createAttempt(() => 0.05);
+  for (const question of attempt.questions) {
+    const original = QUESTION_BANK.find((item) => item.id === question.id);
+    assert.deepEqual([...question.options].sort(), [...original.options].sort());
+    assert.equal(question.correctAnswer, original.correctAnswer);
+  }
+  assert.ok(attempt.questions.some((question) => {
+    const original = QUESTION_BANK.find((item) => item.id === question.id);
+    return question.options.some((choice, index) => choice !== original.options[index]);
+  }));
+});
+
+test('every dropdown includes all five real answers and two distinct distractors in shuffled order', () => {
+  const first = createAttempt(() => 0.07);
+  const second = createAttempt(() => 0.93);
+  assert.equal(first.matchingChoices.length, 7);
+  assert.equal(new Set(first.matchingChoices.map((choice) => choice.descriptionId)).size, 7);
+  for (const pair of MATCHING_PAIRS) assert.ok(first.matchingChoices.some((choice) => choice.descriptionId === pair.descriptionId));
+  assert.notDeepEqual(first.matchingChoices.map((c) => c.descriptionId),second.matchingChoices.map((c) => c.descriptionId));
+  const wrong = first.matchingChoices.find((choice) => !MATCHING_PAIRS.some((pair) => pair.descriptionId === choice.descriptionId));
+  placeMatch(first,'solar',wrong.descriptionId);
+  assert.equal(first.matches.get('solar'),wrong.descriptionId);
+  const review = createReview(first);
+  assert.equal(review.matches[0].learnerDescription,wrong.description);
+  assert.equal(review.matches[0].correct,false);
+});

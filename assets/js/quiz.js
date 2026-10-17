@@ -19,6 +19,11 @@ export const MATCHING_PAIRS = Object.freeze([
   { typeId: 'geothermal', typeLabel: 'Geothermal Energy', descriptionId: 'earth', description: "The Earth's natural heat is used for electricity or direct heating." }
 ]);
 
+export const MATCHING_DISTRACTORS = Object.freeze([
+  { descriptionId: 'fossil', description: 'Burning coal heats water into steam that turns an electricity-generating turbine.' },
+  { descriptionId: 'nuclear', description: 'Nuclear fission produces heat to create steam that drives an electricity generator.' }
+]);
+
 function shuffled(items, random) {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -30,7 +35,11 @@ function shuffled(items, random) {
 
 export function createAttempt(random = Math.random) {
   return {
-    questions: shuffled(QUESTION_BANK, random).slice(0, 5),
+    questions: shuffled(QUESTION_BANK, random).slice(0, 5).map((question) => ({
+      ...question,
+      options: shuffled(question.options, random)
+    })),
+    matchingChoices: shuffled([...MATCHING_PAIRS, ...MATCHING_DISTRACTORS], random),
     answers: new Map(),
     matches: new Map()
   };
@@ -43,7 +52,7 @@ export function answerQuestion(attempt, id, value) {
 
 export function placeMatch(attempt, typeId, descriptionId) {
   const knownType = MATCHING_PAIRS.some((pair) => pair.typeId === typeId);
-  const knownDescription = MATCHING_PAIRS.some((pair) => pair.descriptionId === descriptionId);
+  const knownDescription = [...MATCHING_PAIRS, ...MATCHING_DISTRACTORS].some((pair) => pair.descriptionId === descriptionId);
   if (knownType && knownDescription) attempt.matches.set(typeId, descriptionId);
   else if (knownType && !descriptionId) attempt.matches.delete(typeId);
   return attempt;
@@ -72,7 +81,7 @@ export function scoreAttempt(attempt) {
 }
 
 export function createReview(attempt) {
-  const descriptionById = new Map(MATCHING_PAIRS.map((pair) => [pair.descriptionId, pair.description]));
+  const descriptionById = new Map([...MATCHING_PAIRS, ...MATCHING_DISTRACTORS].map((pair) => [pair.descriptionId, pair.description]));
   return {
     questions: attempt.questions.map((question) => ({
       id: question.id,

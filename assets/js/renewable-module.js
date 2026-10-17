@@ -232,7 +232,7 @@ function renderKnowledge(state) {
             <p>Drag a description on desktop, or use the select controls on any device.</p>
           </div>
           <div class="matching-bank" aria-hidden="true">
-            ${MATCHING_PAIRS.map((pair) => `<div class="matching-chip" draggable="true" data-description-id="${pair.descriptionId}">${escapeHtml(pair.description)}</div>`).join('')}
+            ${attempt.matchingChoices.map((pair) => `<div class="matching-chip" draggable="true" data-description-id="${pair.descriptionId}">${escapeHtml(pair.description)}</div>`).join('')}
           </div>
           <div class="matching-grid">
             ${MATCHING_PAIRS.map((pair) => `
@@ -240,7 +240,7 @@ function renderKnowledge(state) {
                 <strong>${escapeHtml(pair.typeLabel)}</strong>
                 <select data-match-select="${pair.typeId}">
                   <option value="">Choose description…</option>
-                  ${MATCHING_PAIRS.map((choice) => `<option value="${choice.descriptionId}"${attempt.matches.get(pair.typeId) === choice.descriptionId ? ' selected' : ''}>${escapeHtml(choice.description)}</option>`).join('')}
+                  ${attempt.matchingChoices.map((choice) => `<option value="${choice.descriptionId}"${attempt.matches.get(pair.typeId) === choice.descriptionId ? ' selected' : ''}>${escapeHtml(choice.description)}</option>`).join('')}
                 </select>
               </label>`).join('')}
           </div>
@@ -381,7 +381,7 @@ export function createRenewableModuleController({ root, launchButton, onExit }) 
     }
     if (nextButton) {
       nextButton.disabled = !canAdvance(state);
-      nextButton.hidden = state.screen === LAST_SCREEN;
+      nextButton.hidden = state.screen >= 4;
     }
     if (sectionLabel) sectionLabel.textContent = SCREEN_LABELS[state.screen];
     if (progressText) progressText.textContent = `${state.screen + 1} of ${LAST_SCREEN + 1}`;
@@ -409,6 +409,12 @@ export function createRenewableModuleController({ root, launchButton, onExit }) 
     setPageInert(true);
     const focusables = focusableInDialog();
     (focusables[0] ?? dialog).focus?.();
+  };
+
+  const showScreenTop = () => {
+    if (!stage) return;
+    stage.scrollTop = 0;
+    stage.focus?.({ preventScroll: true });
   };
 
   const bindScreenInteractions = () => {
@@ -465,10 +471,10 @@ export function createRenewableModuleController({ root, launchButton, onExit }) 
       state.review = createReview(state.attempt);
       advance(state);
       render();
-      stage.focus?.();
+      showScreenTop();
     });
-    stage.querySelector('#review-answers')?.addEventListener('click', () => { state.reviewMode = true; render(); stage.focus?.(); });
-    stage.querySelector('#back-to-result')?.addEventListener('click', () => { state.reviewMode = false; render(); stage.focus?.(); });
+    stage.querySelector('#review-answers')?.addEventListener('click', () => { state.reviewMode = true; render(); showScreenTop(); });
+    stage.querySelector('#back-to-result')?.addEventListener('click', () => { state.reviewMode = false; render(); showScreenTop(); });
     stage.querySelector('#try-again')?.addEventListener('click', () => {
       state.attempt = retryAttempt();
       state.result = null;
@@ -476,12 +482,12 @@ export function createRenewableModuleController({ root, launchButton, onExit }) 
       state.reviewMode = false;
       state.screen = 4;
       render();
-      stage.focus?.();
+      showScreenTop();
     });
     stage.querySelector('#restart-module')?.addEventListener('click', () => {
       resetModuleState(state);
       render();
-      stage.focus?.();
+      showScreenTop();
     });
     stage.querySelector('#result-exit')?.addEventListener('click', () => exit());
     stage.querySelector('#open-avonmouth')?.addEventListener('click', (event) => openDialog(event.currentTarget));
@@ -502,7 +508,7 @@ export function createRenewableModuleController({ root, launchButton, onExit }) 
     setSiteUnderlayInert(true);
     if (doc?.body) doc.body.dataset.moduleOpen = 'true';
     render();
-    stage?.focus?.();
+    showScreenTop();
   };
 
   const exit = () => {
@@ -516,8 +522,8 @@ export function createRenewableModuleController({ root, launchButton, onExit }) 
   };
 
   launchButton?.addEventListener?.('click', launch);
-  backButton?.addEventListener?.('click', () => { state.reviewMode = false; goBack(state); render(); stage?.focus?.(); });
-  nextButton?.addEventListener?.('click', () => { state.reviewMode = false; advance(state); render(); stage?.focus?.(); });
+  backButton?.addEventListener?.('click', () => { state.reviewMode = false; goBack(state); render(); showScreenTop(); });
+  nextButton?.addEventListener?.('click', () => { state.reviewMode = false; advance(state); render(); showScreenTop(); });
   exitButton?.addEventListener?.('click', exit);
   closeDialogButton?.addEventListener?.('click', closeDialog);
   backdrop?.addEventListener?.('click', (event) => { if (event.target === backdrop) closeDialog(); });
